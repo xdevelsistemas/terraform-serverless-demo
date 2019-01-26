@@ -1,9 +1,18 @@
 module "s3" {
-  source = "./s3-private-repos"
+  source = "../modules/s3-private-repos"
   region = "${var.region}"
 }
 
 module "apigw" {
-  source = "./api-gateway"
+  source = "../modules/api-gateway"
   region = "${var.region}"
+}
+
+module "v1" {
+  source      = "../modules/api-gateway-versioned-resource"
+  rest_api_id = "${module.apigw.api_gw_id}"
+
+  parent_id = "${module.apigw.api_gw_root_id}"
+
+  api_version = "v1"
 }
